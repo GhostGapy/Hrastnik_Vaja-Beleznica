@@ -32,12 +32,12 @@ namespace Beležnica1
             changeFilename("untilted");
         }
 
-        private void SaveToolsStripButton_Click(object sender, EventArgs e)
+        void saveFile(string fname)
         {
             try
             {
-                richTextBox1.SaveFile("myFile.rtf");
-                changeFilename("myFile.rtf");
+                richTextBox1.SaveFile(fname);
+                changeFilename(fname);
             }
             catch (Exception ex)
             {
@@ -45,16 +45,29 @@ namespace Beležnica1
             }
         }
 
+        private void SaveToolsStripButton_Click(object sender, EventArgs e)
+        {
+            if(saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                filename=saveFileDialog1.FileName;
+                saveFile(filename);
+            }
+        }
+
         private void OpenToolsStripButton_Click(object sender, EventArgs e)
         {
-            try
+            if(openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                richTextBox1.LoadFile("myFile.rtf");
-                changeFilename("myFile.rtf");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
+                filename=openFileDialog1.FileName;
+                try
+                {
+                    filename = openFileDialog1.FileName;
+                    changeFilename(filename);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
 
@@ -202,6 +215,30 @@ namespace Beležnica1
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
             TextLengthStatusStripLabel.Text = "Text Lenght: " + richTextBox1.Text.Length;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (filename == "untitled" & richTextBox1.Text != "")
+            {
+                if (MessageBox.Show("Do you want to save file?", "File not saved", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    saveFile("myFile.rtf");
+                }
+            }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MyAboutForm about = new MyAboutForm();
+            if(about.ShowDialog()==DialogResult.Yes)
+            {
+                MessageBox.Show("Nice to hear that!");
+            }
+            else
+            {
+                MessageBox.Show("Sorry to hear that!");
+            }
         }
     }
 }
