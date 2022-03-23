@@ -263,5 +263,32 @@ namespace beleznica
             }
             richTextBox1.Focus();
         }
+
+        private void fontToolStripComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Font oldFont = richTextBox1.SelectionFont;
+            Font newFont = new Font(fontToolStripComboBox.SelectedItem.ToString(), oldFont.Size, oldFont.Style);
+            richTextBox1.SelectionFont=newFont;
+            richTextBox1.Focus();
+        }
+
+        private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            string[] lines = richTextBox1.Text.Split('\n');
+            int x = 20; int y = 20;
+            foreach(string line in lines)
+            {
+                e.Graphics.DrawString(line, new Font("Arial", 10), Brushes.Black, x, y);
+                y = y + 15;
+            }
+        }
+
+        private void printToolStripButton_Click(object sender, EventArgs e)
+        {
+            if(printDialog1.ShowDialog()==DialogResult.OK)
+            {
+                printDocument1.Print();
+            }
+        }
     }
 }
